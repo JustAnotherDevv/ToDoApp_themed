@@ -50,9 +50,7 @@ class TaskList extends Component {
                 <FlatList
                     data={this.state.tasks}
                     //keyExtractor={(index) => index.toString()}
-                    //<Task item_text={item.text} />
-                    //<Text> {item.title} </Text>
-                    renderItem={({ item, index }) => <Task item_title={item.title} /> }
+                    renderItem={({ item, index }) => <Task item_title={item.title}/> }
                 />
             </View>
         )

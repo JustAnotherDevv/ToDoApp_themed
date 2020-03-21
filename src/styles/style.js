@@ -21,7 +21,7 @@ export default StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         //backgroundColor: '#222',
-        borderBottomColor: '#000',
+        borderBottomColor: '#3F602B',
         borderBottomWidth: 2,     
     },
     taskInput: {
@@ -31,9 +31,12 @@ export default StyleSheet.create({
         margin: 10,
     },
     addButton: {
-        width: 60,
+        width: 70,
         height: 40,
         backgroundColor: '#3F602B',
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: '#111',
         margin: 10,
         alignItems: 'center',
         justifyContent: 'center',
