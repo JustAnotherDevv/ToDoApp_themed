@@ -106,7 +106,7 @@ class TaskList extends Component {
                     <TouchableOpacity
                     style={styles.addButton}
                     onPress={this.addTask}>
-                        <Text>ADD</Text>
+                        <Text style={styles.standardEventText}>ADD</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.addTaskContainer}>
@@ -114,13 +114,13 @@ class TaskList extends Component {
                     <TouchableOpacity 
                     style={styles.addButton}
                     onPress={this.changeFilterType}>
-                        <Text numberOfLines={1} >{this.state.filterType}</Text>
+                        <Text numberOfLines={1} style={styles.standardEventText}>{this.state.filterType}</Text>
                     </TouchableOpacity>
                     <Text style={styles.standardEventText}>Sort by: </Text>
                     <TouchableOpacity 
                     style={styles.addButton}
                     onPress={this.changeSortType}>
-                        <Text numberOfLines={1} >{this.state.sortType}</Text>
+                        <Text numberOfLines={1} style={styles.standardEventText}>{this.state.sortType}</Text>
                     </TouchableOpacity>
                 </View>
                 <FlatList

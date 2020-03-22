@@ -20,8 +20,9 @@ export default StyleSheet.create({
     addTaskContainer: {
         flexDirection: 'row',
         width: '100%',
-        borderBottomColor: '#3F602B',
+        borderBottomColor: '#222',
         borderBottomWidth: 2,
+        justifyContent: 'space-around'
     },
     taskInput: {
         height: 40,
@@ -31,7 +32,7 @@ export default StyleSheet.create({
     },
     addButton: {
         minWidth: 70,
-        backgroundColor: '#3F602B',
+        backgroundColor: '#222',
         borderRadius: 20,
         borderWidth: 1,
         borderColor: '#111',
@@ -42,7 +43,7 @@ export default StyleSheet.create({
     },
     standardEventText: {
         alignSelf: 'center',
-        marginLeft: '10%',
+        color: '#aaa',
     },
     filterButton: {
         backgroundColor: '#3F602B',
@@ -56,7 +57,8 @@ export default StyleSheet.create({
         backgroundColor: '#222',
         marginTop: '2%',
         marginLeft: '1%',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        color: '#aaa',
     },
     deleteButton: {
         flex: 1,
