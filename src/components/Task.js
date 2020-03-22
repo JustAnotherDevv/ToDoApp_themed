@@ -38,13 +38,11 @@ class Task extends Component {
                 numberOfLines={1}>
                     {this.props.item.title}
                 </TextInput>
-                <View onClick={this.props.setDone} >
                     <CheckBox
         style={{flex: 1, padding: 10}}
         onClick={this.props.setDone} 
         isChecked={this.props.item.done}
     />
-</View>
             </View>
         )
     }

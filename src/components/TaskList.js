@@ -51,8 +51,10 @@ class TaskList extends Component {
     }
 
     switchCheckbox = index => {
-        this.array[index].done = !this.array[index].done
-        this.setState({tasks: this.array})
+        let tempArr = this.state.tasks
+        tempArr[index].done = !tempArr[index].done
+        return this.passFilterSortTasks(this.state.filterType, this.state.sortType)
+        //this.setState({tasks: this.array})
     }
 
     changeFilterType = () => {
