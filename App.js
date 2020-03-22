@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 import styles from './src/styles/style.js';
 import TaskList from './src/components/TaskList.js';
 

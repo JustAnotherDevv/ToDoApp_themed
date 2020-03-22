@@ -20,9 +20,8 @@ export default StyleSheet.create({
     addTaskContainer: {
         flexDirection: 'row',
         width: '100%',
-        //backgroundColor: '#222',
         borderBottomColor: '#3F602B',
-        borderBottomWidth: 2,     
+        borderBottomWidth: 2,
     },
     taskInput: {
         height: 40,
@@ -31,21 +30,28 @@ export default StyleSheet.create({
         margin: 10,
     },
     addButton: {
-        width: 70,
-        height: 40,
+        minWidth: 70,
         backgroundColor: '#3F602B',
         borderRadius: 20,
         borderWidth: 1,
         borderColor: '#111',
         margin: 10,
+        padding: 5,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    standardEventText: {
+        alignSelf: 'center',
+        marginLeft: '10%',
+    },
+    filterButton: {
+        backgroundColor: '#3F602B',
     },
     singleTask: {
         flexDirection: 'row'
     },
     singleTaskText: {
-        width: '90%',
+        width: '80%',
         height: 30,
         backgroundColor: '#222',
         marginTop: '2%',
@@ -57,4 +63,4 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-  });
+  })
