@@ -4,7 +4,7 @@ import CheckBox from 'react-native-check-box'
 import styles from '../styles/style.js'
 import Task from './Task.js'
 
-class TaskList extends Component {
+export default class TaskList extends Component {
     constructor(props) {
 
         super(props)
@@ -97,7 +97,7 @@ class TaskList extends Component {
     render() {
         return (
             <View style={styles.wholeList}>
-                <View style={styles.addTaskContainer}>
+                <View style={styles.addTaskContainer}>  
                     <TextInput style={styles.taskInput}
                         value={this.state.text}
                         placeholder='Type note here'
@@ -131,13 +131,11 @@ class TaskList extends Component {
                         done: item.done,
                         index: index
                     }} onPressDelete={() =>this.deleteTask(index)}
-                    setDone={() =>this.switchCheckbox(index)} />}
+                    setDone={() =>this.switchCheckbox(index)}
+                    show={(item) => Alert.alert(this.state.tasks[index].title)} />}
                 />
             </View>
         )
     }
 
 }
-
-
-module.exports = TaskList

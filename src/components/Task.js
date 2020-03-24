@@ -2,25 +2,12 @@ import React, {Component} from 'react';
 import { StyleSheet, View, Image, TextInput, Text, Button, FlatList, Alert, TouchableOpacity, NativeModules, Keyboard, AsyncStorage, Platform } from 'react-native';
 import CheckBox from 'react-native-check-box'
 import styles from '../styles/style.js';
-class Task extends Component {
+export default class Task extends Component {
     constructor(props) {
 
         super(props)
 
-        this.promptMe = this.promptMe.bind(this)
-
-        this.state = {
-            title: ''
-        }
-
-    }
-
-    componentDidMount() {
-        this.setState({title: this.props.item.title})
-    }
-
-    promptMe() {
-        Alert.alert(this.props.item.title)
+        //this.promptMe = this.promptMe.bind(this)
     }
 
     render() {
@@ -33,21 +20,22 @@ class Task extends Component {
                 >
                     <Text>X</Text>
                 </TouchableOpacity>
-                <TextInput
+                <TouchableOpacity
                 style={styles.singleTaskText}
-                numberOfLines={1}>
-                    {this.props.item.title}
-                </TextInput>
+                onPress={this.props.show}>
+                    <Text
+                    style={styles.singleTaskText}
+                    numberOfLines={1}>
+                        {this.props.item.title}
+                    </Text>
+                </TouchableOpacity>
                     <CheckBox
         style={{flex: 1, padding: 10}}
         onClick={this.props.setDone} 
         isChecked={this.props.item.done}
-    />
+                />
             </View>
         )
     }
 
 }
-
-
-module.exports = Task;
