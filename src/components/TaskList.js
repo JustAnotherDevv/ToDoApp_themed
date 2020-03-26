@@ -1,141 +1,172 @@
-import React, {Component} from 'react'
-import { StyleSheet, View, Image, TextInput, Text, Button, FlatList, Alert, TouchableOpacity, NativeModules, Keyboard, AsyncStorage, Platform } from 'react-native'
-import CheckBox from 'react-native-check-box'
-import styles from '../styles/style.js'
-import Task from './Task.js'
+import React, { useState, useEffect } from 'react';
+import {
+  StyleSheet,
+  View,
+  Image,
+  TextInput,
+  Text,
+  Button,
+  FlatList,
+  Alert,
+  TouchableOpacity,
+  NativeModules,
+  Keyboard,
+  AsyncStorage,
+  Platform
+} from 'react-native';
+import CheckBox from 'react-native-check-box';
+import styles from '../styles/style.js';
+import Task from './Task.js';
 
-export default class TaskList extends Component {
-    constructor(props) {
-
-        super(props)
-
-        this.array = [{
-            title: 'sample note', done: false
-        },
-        {
-            title: 'another note', done: true
-        },
-        {
-            title: 'I am just a test', done: true
-        },
-        {
-            title: 'me too', done: false
-        }]
-
-        this.state = {
-            tasks: [],
-            text: '',
-            filterType: 'all',
-            sortType: 'date'
-        }
+const TaskList = () => {
+  let tasksArr = [
+    {
+      title: 'sample note',
+      done: false
+    },
+    {
+      title: 'another note',
+      done: true
+    },
+    {
+      title: 'I am just a test',
+      done: true
+    },
+    {
+      title: 'me too',
+      done: false
     }
-	
-    componentDidMount() {
-        this.setState({ tasks: [...this.array] })
-    }
+  ];
 
-    addTask = () => {
-        if(this.state.text !== '') {
-            this.array.push({title : this.state.text, done: false})
-            this.passFilterSortTasks(this.state.filterType, this.state.sortType)
-            //this.setState({ tasks: [...this.array] })
-            this.setState({text: ''})
-        }else
-        Alert.alert('Note title can\'t be empty')
-    }
+  const [tasks, setTasks] = useState();
+  const [text, setText] = useState('');
+  const [filterType, setFilterType] = useState('all');
+  const [sortType, setSortType] = useState('date');
 
-    deleteTask = index => {
-                this.array = this.state.tasks
-                this.array.splice(index, 1)
-                this.setState({tasks: this.array})
-    }
+  useEffect(() => {
+    //Alert.alert('rerendered');
+    setTasks([...tasksArr]);
+  }, []);
 
-    switchCheckbox = index => {
-        let tempArr = this.state.tasks
-        tempArr[index].done = !tempArr[index].done
-        return this.passFilterSortTasks(this.state.filterType, this.state.sortType)
-        //this.setState({tasks: this.array})
-    }
+  const addTask = () => {
+    if (text !== '') {
+      let tempArr = tasks;
+      tempArr.push({ title: text, done: false });
+      // passFilterSortTasks(filterType, sortType);
+      setTasks(tempArr);
+      setText('');
+    } else Alert.alert("Note title can't be empty");
+  };
 
-    changeFilterType = () => {
-        const oldType = this.state.filterType
-        const newType = (oldType === 'all') ? 'unfinished' :  (oldType === 'unfinished') ? 'finished' : 'all'
-        this.setState({filterType: newType})
-        this.passFilterSortTasks(newType, this.state.sortType)
-    }
+  let deleteTask = index => {
+    //bug where if tasks are sorted by finished or unfinished and 1 is deleted, standard order in saved array is changed and after attempt to sort by date array is still sorted by previous configuration when task was removed
+    let tempArr = [...tasks];
+    tempArr.splice(index, 1);
+    setTasks(tempArr);
+    //return passFilterSortTasks(filterType, sortType);
+  };
 
-    changeSortType = () => {
-        const newType = (this.state.sortType === 'date') ? 'unfinished' :  (this.state.sortType === 'unfinished') ? 'finished' : 'date'
-        this.setState({sortType: newType})
-        this.passFilterSortTasks(this.state.filterType, newType)
-    }
+  let switchCheckbox = index => {
+    let tempArr = [...tasks];
+    tempArr[index].done = !tempArr[index].done;
+    setTasks(tempArr);
+    return passFilterSortTasks(filterType, sortType);
+  };
 
-    passFilterSortTasks = (filterType, sortType) => {
-        let filteredList = this.array, len = filteredList.length
+  const changeFilterType = () => {
+    const newType =
+      filterType === 'all'
+        ? 'unfinished'
+        : filterType === 'unfinished'
+        ? 'finished'
+        : 'all';
+    setFilterType(newType);
+    passFilterSortTasks(newType, sortType);
+  };
 
-        if(sortType === 'unfinished') {
-            filteredList = this.filterIt(sortType, filteredList).concat(this.filterIt('finished', filteredList))
-        }else if(sortType === 'finished') {
-            filteredList = this.filterIt(sortType, filteredList).concat(this.filterIt('unfinished', filteredList))
-        }else filteredList = this.array
+  const changeSortType = () => {
+    const newType =
+      sortType === 'date'
+        ? 'unfinished'
+        : sortType === 'unfinished'
+        ? 'finished'
+        : 'date';
+    setSortType(newType);
+    passFilterSortTasks(filterType, newType);
+  };
 
-        filteredList = this.filterIt(filterType, filteredList)
+  const passFilterSortTasks = (filterType, sortType) => {
+    let filteredList = [...tasks],
+      len = filteredList.length;
 
-        this.setState({tasks: filteredList})
-        }
+    if (sortType === 'unfinished') {
+      filteredList = filterIt(sortType, filteredList).concat(
+        filterIt('finished', filteredList)
+      );
+    } else if (sortType === 'finished') {
+      filteredList = filterIt(sortType, filteredList).concat(
+        filterIt('unfinished', filteredList)
+      );
+    } else filteredList = [...tasks];
 
-    filterIt = (filterType, filteredList) => {
-        if(filterType === 'unfinished') {
-            filteredList = filteredList.filter(x => (x.done === false) ? x : false )
-        }else if(filterType === 'finished') {
-            filteredList = filteredList.filter(x => (x.done === true) ? x : false)
-        }else filteredList = filteredList
-            //this.setState({tasks: filteredList})
-            return filteredList
-    }
+    filteredList = filterIt(filterType, filteredList);
 
-    render() {
-        return (
-            <View style={styles.wholeList}>
-                <View style={styles.addTaskContainer}>  
-                    <TextInput style={styles.taskInput}
-                        value={this.state.text}
-                        placeholder='Type note here'
-                        onChangeText={data => this.setState({ text: data })}
-                    />
-                    <TouchableOpacity
-                    style={styles.addButton}
-                    onPress={this.addTask}>
-                        <Text style={styles.standardEventText}>ADD</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.addTaskContainer}>
-                    <Text style={styles.standardEventText}>Filter: </Text>
-                    <TouchableOpacity 
-                    style={styles.addButton}
-                    onPress={this.changeFilterType}>
-                        <Text numberOfLines={1} style={styles.standardEventText}>{this.state.filterType}</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.standardEventText}>Sort by: </Text>
-                    <TouchableOpacity 
-                    style={styles.addButton}
-                    onPress={this.changeSortType}>
-                        <Text numberOfLines={1} style={styles.standardEventText}>{this.state.sortType}</Text>
-                    </TouchableOpacity>
-                </View>
-                <FlatList
-                    data={this.state.tasks}
-                    //keyExtractor={(index) => index.toString()}
-                    renderItem={({ item, index }) => <Task item={{
-                        title: item.title,
-                        done: item.done,
-                        index: index
-                    }} onPressDelete={() =>this.deleteTask(index)}
-                    setDone={() =>this.switchCheckbox(index)}
-                    show={(item) => Alert.alert(this.state.tasks[index].title)} />}
-                />
-            </View>
-        )
-    }
+    setTasks(filteredList);
+  };
 
-}
+  const filterIt = (filterType, filteredList) => {
+    if (filterType === 'unfinished') {
+      return filteredList.filter(x => !x.done);
+    } else if (filterType === 'finished')
+      return filteredList.filter(x => x.done);
+    return filteredList;
+  };
+
+  return (
+    <View style={styles.wholeList}>
+      <View style={styles.addTaskContainer}>
+        <TextInput
+          style={styles.taskInput}
+          value={text}
+          placeholder="Type note here"
+          onChangeText={data => setText(data)}
+        />
+        <TouchableOpacity style={styles.addButton} onPress={addTask}>
+          <Text style={styles.standardEventText}>ADD</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.addTaskContainer}>
+        <Text style={styles.standardEventText}>Filter: </Text>
+        <TouchableOpacity style={styles.addButton} onPress={changeFilterType}>
+          <Text numberOfLines={1} style={styles.standardEventText}>
+            {filterType}
+          </Text>
+        </TouchableOpacity>
+        <Text style={styles.standardEventText}>Sort by: </Text>
+        <TouchableOpacity style={styles.addButton} onPress={changeSortType}>
+          <Text numberOfLines={1} style={styles.standardEventText}>
+            {sortType}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <FlatList
+        data={tasks}
+        //keyExtractor={(index) => index.toString()}
+        renderItem={({ item, index }) => (
+          <Task
+            item={{
+              title: item.title,
+              done: item.done,
+              index: index
+            }}
+            onPressDelete={() => deleteTask(index)}
+            setDone={() => switchCheckbox(index)}
+            show={item => Alert.alert(tasks[index].title)}
+          />
+        )}
+      />
+    </View>
+  );
+};
+
+export default TaskList;
