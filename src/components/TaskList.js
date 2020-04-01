@@ -1,166 +1,75 @@
 import React, { useState, useEffect } from 'react';
 import {
-  StyleSheet,
   View,
-  Image,
   TextInput,
-  Text,
-  Button,
   FlatList,
   Alert,
-  TouchableOpacity,
-  NativeModules,
-  Keyboard,
-  AsyncStorage,
-  Platform
+  TouchableOpacity
 } from 'react-native';
-import CheckBox from 'react-native-check-box';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  addtask,
+  deletetask,
+  settext,
+  switchcheckbox
+} from '../redux/notesApp.js';
 import styles from '../styles/style.js';
+import themeStyles from '../styles/themeStyle.js';
 import Task from './Task.js';
+import MyText from './MyText.js';
 
-const TaskList = () => {
-  let tasksArr = [
-    {
-      title: 'sample note',
-      done: false
-    },
-    {
-      title: 'another note',
-      done: true
-    },
-    {
-      title: 'I am just a test',
-      done: true
-    },
-    {
-      title: 'me too',
-      done: false
-    }
-  ];
-
-  const [tasks, setTasks] = useState();
+const TaskList = ({ navigation }) => {
   const [text, setText] = useState('');
-  const [filterType, setFilterType] = useState('all');
-  const [sortType, setSortType] = useState('date');
 
-  useEffect(() => {
-    //Alert.alert('rerendered');
-    setTasks([...tasksArr]);
-  }, []);
+  const tasks = useSelector(state => state.tasks);
+
+  const dispatch = useDispatch();
+  const addNote = note => dispatch(addtask(note));
+  const deleteNote = id => dispatch(deletetask(id));
+  const switchCheckbox = id => dispatch(switchcheckbox(id));
+
+  let themeStyle = themeStyles();
 
   const addTask = () => {
     if (text !== '') {
-      let tempArr = tasks;
-      tempArr.push({ title: text, done: false });
-      // passFilterSortTasks(filterType, sortType);
-      setTasks(tempArr);
+      addNote(text);
       setText('');
     } else Alert.alert("Note title can't be empty");
   };
 
   let deleteTask = index => {
-    //bug where if tasks are sorted by finished or unfinished and 1 is deleted, standard order in saved array is changed and after attempt to sort by date array is still sorted by previous configuration when task was removed
-    let tempArr = [...tasks];
-    tempArr.splice(index, 1);
-    setTasks(tempArr);
-    //return passFilterSortTasks(filterType, sortType);
+    deleteNote(index);
   };
 
-  let switchCheckbox = index => {
-    let tempArr = [...tasks];
-    tempArr[index].done = !tempArr[index].done;
-    setTasks(tempArr);
-    return passFilterSortTasks(filterType, sortType);
-  };
-
-  const changeFilterType = () => {
-    const newType =
-      filterType === 'all'
-        ? 'unfinished'
-        : filterType === 'unfinished'
-        ? 'finished'
-        : 'all';
-    setFilterType(newType);
-    passFilterSortTasks(newType, sortType);
-  };
-
-  const changeSortType = () => {
-    const newType =
-      sortType === 'date'
-        ? 'unfinished'
-        : sortType === 'unfinished'
-        ? 'finished'
-        : 'date';
-    setSortType(newType);
-    passFilterSortTasks(filterType, newType);
-  };
-
-  const passFilterSortTasks = (filterType, sortType) => {
-    let filteredList = [...tasks],
-      len = filteredList.length;
-
-    if (sortType === 'unfinished') {
-      filteredList = filterIt(sortType, filteredList).concat(
-        filterIt('finished', filteredList)
-      );
-    } else if (sortType === 'finished') {
-      filteredList = filterIt(sortType, filteredList).concat(
-        filterIt('unfinished', filteredList)
-      );
-    } else filteredList = [...tasks];
-
-    filteredList = filterIt(filterType, filteredList);
-
-    setTasks(filteredList);
-  };
-
-  const filterIt = (filterType, filteredList) => {
-    if (filterType === 'unfinished') {
-      return filteredList.filter(x => !x.done);
-    } else if (filterType === 'finished')
-      return filteredList.filter(x => x.done);
-    return filteredList;
+  let setCheckbox = index => {
+    switchCheckbox(index);
   };
 
   return (
-    <View style={styles.wholeList}>
+    <View style={themeStyle.container}>
       <View style={styles.addTaskContainer}>
         <TextInput
           style={styles.taskInput}
           value={text}
           placeholder="Type note here"
+          underlineColorAndroid="transparent"
           onChangeText={data => setText(data)}
         />
-        <TouchableOpacity style={styles.addButton} onPress={addTask}>
-          <Text style={styles.standardEventText}>ADD</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.addTaskContainer}>
-        <Text style={styles.standardEventText}>Filter: </Text>
-        <TouchableOpacity style={styles.addButton} onPress={changeFilterType}>
-          <Text numberOfLines={1} style={styles.standardEventText}>
-            {filterType}
-          </Text>
-        </TouchableOpacity>
-        <Text style={styles.standardEventText}>Sort by: </Text>
-        <TouchableOpacity style={styles.addButton} onPress={changeSortType}>
-          <Text numberOfLines={1} style={styles.standardEventText}>
-            {sortType}
-          </Text>
+        <TouchableOpacity style={themeStyle.standardButton} onPress={addTask}>
+          <MyText text="ADD" />
         </TouchableOpacity>
       </View>
       <FlatList
+        style={styles.listStyler}
         data={tasks}
-        //keyExtractor={(index) => index.toString()}
         renderItem={({ item, index }) => (
           <Task
             item={{
               title: item.title,
-              done: item.done,
-              index: index
+              done: item.done
             }}
             onPressDelete={() => deleteTask(index)}
-            setDone={() => switchCheckbox(index)}
+            setDone={() => setCheckbox(index)}
             show={item => Alert.alert(tasks[index].title)}
           />
         )}

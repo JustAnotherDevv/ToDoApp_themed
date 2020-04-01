@@ -1,51 +1,37 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  View,
-  Image,
-  TextInput,
-  Text,
-  Button,
-  FlatList,
-  Alert,
-  TouchableOpacity,
-  NativeModules,
-  Keyboard,
-  AsyncStorage,
-  Platform
-} from 'react-native';
+import React, { Component, useState, useEffect } from 'react';
+import { View, TouchableOpacity } from 'react-native';
 import CheckBox from 'react-native-check-box';
 import styles from '../styles/style.js';
-export default class Task extends Component {
-  constructor(props) {
-    super(props);
+import themeStyles from '../styles/themeStyle.js';
+import MyText from './MyText.js';
+const Task = props => {
+  const [texthere, setTexthere] = useState('');
 
-    //this.promptMe = this.promptMe.bind(this)
-  }
+  useEffect(() => {
+    setTexthere(props.item.title);
+  }, []);
 
-  render() {
-    return (
-      <View style={styles.singleTask}>
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={this.props.onPressDelete}
-        >
-          <Text>X</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.singleTaskText}
-          onPress={this.props.show}
-        >
-          <Text style={styles.singleTaskText} numberOfLines={1}>
-            {this.props.item.title}
-          </Text>
-        </TouchableOpacity>
-        <CheckBox
-          style={{ flex: 1, padding: 10 }}
-          onClick={this.props.setDone}
-          isChecked={this.props.item.done}
-        />
-      </View>
-    );
-  }
-}
+  let themeStyle = themeStyles();
+
+  return (
+    <View style={styles.singleTask}>
+      <CheckBox
+        style={styles.deleteButton}
+        onClick={props.setDone}
+        isChecked={props.item.done}
+        checkBoxColor={themeStyle.text.color}
+      />
+      <TouchableOpacity style={styles.singleTaskText} onPress={props.show}>
+        <MyText text={props.item.title} />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={props.onPressDelete}
+      >
+        <MyText iconName="delete" />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export default Task;

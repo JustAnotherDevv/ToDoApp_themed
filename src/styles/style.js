@@ -1,22 +1,6 @@
 import { StyleSheet, Platform } from 'react-native';
-import { Constants } from 'expo';
 
 export default StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#111',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column'
-  },
-  wholeList: {
-    width: '90%',
-    marginTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight,
-    marginBottom: '15%',
-    backgroundColor: '#111',
-    flex: 1,
-    justifyContent: 'flex-start'
-  },
   addTaskContainer: {
     flexDirection: 'row',
     width: '100%',
@@ -26,43 +10,28 @@ export default StyleSheet.create({
   },
   taskInput: {
     height: 40,
-    backgroundColor: '#111',
-    flex: 7,
-    margin: 10
-  },
-  addButton: {
-    minWidth: 70,
-    backgroundColor: '#222',
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#111',
-    margin: 10,
-    padding: 5,
-    alignItems: 'center',
-    justifyContent: 'center'
+    borderWidth: 2,
+    borderColor: '#222',
+    flex: 7,
+    margin: 5,
+    paddingLeft: 8
   },
-  standardEventText: {
-    alignSelf: 'center',
-    color: '#aaa'
-  },
-  filterButton: {
-    backgroundColor: '#3F602B'
+  listStyler: {
+    width: '100%'
   },
   singleTask: {
-    flexDirection: 'row'
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 40
   },
   singleTaskText: {
-    width: '80%',
-    height: 30,
-    backgroundColor: '#222',
-    marginTop: '2%',
-    marginLeft: '1%',
-    overflow: 'hidden',
-    color: '#aaa'
+    flex: 10,
+    flexDirection: 'row'
   },
   deleteButton: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    paddingHorizontal: 10
   }
 });
